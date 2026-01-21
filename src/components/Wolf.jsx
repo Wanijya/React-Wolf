@@ -6,13 +6,19 @@ import {
   useTexture,
   useAnimations,
 } from "@react-three/drei";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const Wolf = () => {
+  gsap.registerPlugin(useGSAP());
+  gsap.registerPlugin(ScrollTrigger);
+
   const model = useGLTF("/models/wolf.drc.glb");
 
   useThree(({ camera, scene, gl }) => {
-    camera.position.z = 0.6;
+    camera.position.z = 0.5;
     gl.toneMapping = THREE.ReinhardToneMapping;
     gl.outputColorSpace = THREE.SRGBColorSpace;
   });
@@ -59,15 +65,54 @@ const Wolf = () => {
     }
   });
 
+  //==========================================================================(
+
+  const wolfModel = useRef(model);
+
+  useGSAP(() => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#section-1",
+        endTrigger: "#section-3",
+        start: "top top",
+        end: "bottom bottom",
+        markers: true,
+        scrub: true,
+      },
+    });
+    tl.to(wolfModel.current.scene.position, {
+      z: "-=0.75",
+      y: "+=0.1",
+    });
+    tl.to(wolfModel.current.scene.rotation, {
+      x: `+=${Math.PI / 15}`,
+    });
+    tl.to(
+      wolfModel.current.scene.rotation,
+      {
+        y: `-=${Math.PI}`,
+      },
+      "third",
+    );
+    tl.to(
+      wolfModel.current.scene.position,
+      {
+        x: "-=0.5",
+        z: "+=0.6",
+        y: "-=0.05",
+      },
+      "third",
+    );
+  }, []);
+
   return (
     <>
       <primitive
         object={model.scene}
-        position={[0.2, -0.53, 0]}
+        position={[0.2, -0.56, 0]}
         rotation={[0, Math.PI / 4.5, 0]}
       />
       <directionalLight position={[0, 5, 5]} color={0xffffff} intensity={10} />
-      <OrbitControls />
     </>
   );
 };

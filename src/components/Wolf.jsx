@@ -159,10 +159,10 @@ const Wolf = () => {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: "#section-1",
-        endTrigger: "#section-3",
+        endTrigger: "#section-4",
         start: "top top",
         end: "bottom bottom",
-        markers: true,
+        // markers: true,
         scrub: true,
       },
     });

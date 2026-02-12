@@ -18,7 +18,7 @@ const Wolf = () => {
   const model = useGLTF("/models/wolf.drc.glb");
 
   useThree(({ camera, scene, gl }) => {
-    camera.position.z = 0.5;
+    camera.position.z = 0.55;
     gl.toneMapping = THREE.ReinhardToneMapping;
     gl.outputColorSpace = THREE.SRGBColorSpace;
   });
